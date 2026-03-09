@@ -1,0 +1,9 @@
+{
+  "name": "nodejs-app",
+  "version": "1.0.0",
+  "description": "Sample Node.js app for OpenShift CI/CD",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  }
+}
