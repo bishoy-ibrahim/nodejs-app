@@ -81,7 +81,7 @@ spec:
             variable: 'GIT_TOKEN'
           )]) {
             sh """
-              cd /workspace
+              cd /tmp
               git clone https://bishoy-ibrahim:${GIT_TOKEN}@github.com/bishoy-ibrahim/argocd-demo.git
               cd argocd-demo
               git config user.email "bishohima7@gmail.com"
