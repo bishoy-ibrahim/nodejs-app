@@ -63,11 +63,11 @@ spec:
             usernameVariable: 'QUAY_USER',
             passwordVariable: 'QUAY_TOKEN'
           )]) {
-            sh """
-              buildah login -u ${QUAY_USER} -p ${QUAY_TOKEN} quay.io
-              buildah push --tls-verify=false ${IMAGE}:${BUILD_NUMBER} docker://${IMAGE}:${BUILD_NUMBER}
-              buildah push --tls-verify=false ${IMAGE}:latest docker://${IMAGE}:latest
-            """
+            sh '''
+              buildah login -u $QUAY_USER -p $QUAY_TOKEN quay.io
+              buildah push --tls-verify=false $IMAGE:$BUILD_NUMBER docker://$IMAGE:$BUILD_NUMBER
+              buildah push --tls-verify=false $IMAGE:latest docker://$IMAGE:latest
+            '''
           }
         }
       }
@@ -80,17 +80,18 @@ spec:
             credentialsId: 'github-token',
             variable: 'GIT_TOKEN'
           )]) {
-            sh """
+            sh '''
               cd /tmp
-              git clone https://bishoy-ibrahim:${GIT_TOKEN}@github.com/bishoy-ibrahim/argocd-demo.git
+              rm -rf argocd-demo
+              git clone https://bishoy-ibrahim:$GIT_TOKEN@github.com/bishoy-ibrahim/argocd-demo.git
               cd argocd-demo
               git config user.email "bishohima7@gmail.com"
               git config user.name "bishoy-ibrahim"
-              sed -i "s|image:.*|image: ${IMAGE}:${BUILD_NUMBER}|g" environments/dev/deployment.yaml
+              sed -i "s|image:.*|image: $IMAGE:$BUILD_NUMBER|g" environments/dev/deployment.yaml
               git add .
-              git commit -m "update: image tag to ${BUILD_NUMBER}"
+              git commit -m "update: image tag to $BUILD_NUMBER"
               git push origin master
-            """
+            '''
           }
         }
       }
@@ -99,7 +100,7 @@ spec:
 
   post {
     success {
-      echo "Pipeline succeeded! Image ${IMAGE}:${BUILD_NUMBER} deployed!"
+      echo "Pipeline succeeded! Image deployed!"
     }
     failure {
       echo "Pipeline failed!"
